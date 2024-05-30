@@ -1,8 +1,7 @@
 package menu;
 import javax.swing.*;
 import GestionProduits.GestionProduits;
-
-
+import Panier.Panier;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,6 +22,14 @@ public class menu {
         });
 
         JButton button2 = new JButton("Gestion du panier d'achat");
+        button2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose(); // Ferme la fenêtre actuelle
+                Panier.main(new String[0]); // Ouvre la nouvelle fenêtre
+            }
+        });
+
         JButton button3 = new JButton("Passer une commande");
 
         panel.add(button1);

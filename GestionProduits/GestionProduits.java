@@ -31,6 +31,13 @@ public class GestionProduits {
             }
         });
         JButton button3 = new JButton("Gestion des produits");
+        button3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose(); // Ferme la fenêtre actuelle
+                gestionStock.main(new String[0]); // Ouvre la nouvelle fenêtre
+            }
+        });
 
         JButton backButton = new JButton("Retour");
         backButton.addActionListener(new ActionListener() {
