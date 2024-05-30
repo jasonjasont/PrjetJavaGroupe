@@ -1,0 +1,12 @@
+@startuml BDD
+
+entity "Article" {
+  + id : integer <<generated>>
+  --
+  nom : string
+  prix : float
+  description : text
+  quantite : integer
+}
+
+@enduml
