@@ -3,8 +3,13 @@ package GestionProduits;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.io.FileReader;
+import java.io.IOException;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class gestionStock {
     public static void main(String[] args) {
@@ -14,25 +19,40 @@ public class gestionStock {
         frame.setSize(800, 600);
 
         // Créer un nouveau tableau
-        DefaultTableModel model = new DefaultTableModel(new Object[]{"Produit", "Quantité"}, 0);
+        DefaultTableModel model = new DefaultTableModel(
+                new Object[] { "ID", "Produit", "Prix", "Description", "Quantité" }, 0);
         JTable table = new JTable(model);
 
-        // Ajouter des données au tableau
-        model.addRow(new Object[]{"Produit 1", 10});
-        model.addRow(new Object[]{"Produit 2", 20});
 
-        // Créer une nouvelle barre de recherche
-        JTextField searchField = new JTextField(15);
-        JButton searchButton = new JButton("Rechercher");
-        searchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String searchText = searchField.getText();
-                // Ajouter ici le code pour rechercher dans le stock
+        // Définir une police personnalisée
+        Font font = new Font("Arial", Font.BOLD, 14);
+
+        // Lire le fichier JSON et ajouter les données au tableau
+        try {
+            FileReader reader = new FileReader("BDD/bdd.json");
+            JSONObject jsonObject = new JSONObject(new JSONTokener(reader));
+            JSONArray articles = jsonObject.getJSONArray("articles");
+
+            for (int i = 0; i < articles.length(); i++) {
+                JSONObject article = articles.getJSONObject(i);
+                model.addRow(new Object[] {
+                        article.getInt("id"),
+                        article.getString("nom"),
+                        article.getDouble("prix"),
+                        article.getString("description"),
+                        article.getInt("quantite")
+                });
             }
-        });
-        
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // Bouton de retour
         JButton backButton = new JButton("Retour");
+        backButton.setPreferredSize(new Dimension(250, 40));
+        backButton.setBackground(new Color(169, 169, 169)); // Gris foncé
+        backButton.setForeground(Color.WHITE); // Texte en blanc
+        backButton.setFont(font);
+        backButton.setBorder(BorderFactory.createLineBorder(new Color(169, 169, 169), 2));
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -41,20 +61,14 @@ public class gestionStock {
             }
         });
 
-        
-        
+        // Ajouter le bouton à la fenêtre
+        frame.add(backButton, BorderLayout.SOUTH);
 
-        // Ajouter le tableau et la barre de recherche à la fenêtre
-        frame.setLayout(new BorderLayout());
-        frame.add(new JScrollPane(table), BorderLayout.CENTER);
-
-        JPanel searchPanel = new JPanel();
-        searchPanel.add(backButton);
-        searchPanel.add(searchField);
-        searchPanel.add(searchButton);
-        frame.add(searchPanel, BorderLayout.NORTH);
+        // Ajouter le tableau à la fenêtre
+        frame.add(new JScrollPane(table));
 
         // Afficher la fenêtre
         frame.setVisible(true);
     }
+
 }
