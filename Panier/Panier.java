@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -135,12 +136,34 @@ public class Panier {
         backButton.setFont(new Font("Arial", Font.BOLD, 16));
         backButton.setBorder(BorderFactory.createLineBorder(new Color(169, 169, 169), 2));
         backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose(); // Ferme la fenêtre actuelle
-                menu.main(new String[0]); // Ouvre la nouvelle fenêtre
-            }
-        });
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // Récupérer le contenu du tableau du panier
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < cartModel.getRowCount(); i++) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", cartModel.getValueAt(i, 0));
+            jsonObject.put("nom", cartModel.getValueAt(i, 1));
+            jsonObject.put("quantite", cartModel.getValueAt(i, 2));
+            jsonObject.put("prix", cartModel.getValueAt(i, 3));
+            jsonArray.put(jsonObject);
+        }
+
+        // Convertir le contenu en une chaîne JSON
+        String jsonContent = jsonArray.toString();
+
+        // Écrire la chaîne JSON dans le fichier panier.json
+        try (FileWriter file = new FileWriter("BDD/panier.json")) {
+            file.write(jsonContent);
+            file.flush();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        frame.dispose(); // Ferme la fenêtre actuelle
+        menu.main(new String[0]); // Ouvre la nouvelle fenêtre
+    }
+});
 
         // Ajouter le bouton de retour
         frame.getContentPane().add(backButton);

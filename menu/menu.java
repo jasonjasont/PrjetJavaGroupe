@@ -3,6 +3,7 @@ package menu;
 import javax.swing.*;
 import GestionProduits.GestionProduits;
 import Panier.Panier;
+import commande.commande;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -57,6 +58,13 @@ public class menu {
         button3.setFont(font);
         button3.setBorder(BorderFactory.createLineBorder(new Color(34, 139, 34), 2)); // Assorti à la couleur de fond
 
+        button3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose(); // Ferme la fenêtre actuelle
+                commande.main(new String[0]); // Ouvre la nouvelle fenêtre
+            }
+        });
         // Ajoute les boutons au panneau avec les contraintes de disposition
         gbc.gridx = 0;
         gbc.gridy = 0;
